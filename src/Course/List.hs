@@ -197,8 +197,7 @@ flatMap ::
   (a -> List b)
   -> List a
   -> List b
-flatMap =
-  error "todo"
+flatMap f = foldLeft (\acc x -> acc ++ (f x)) Nil
 
 -- | Flatten a list of lists to a list (again).
 -- HOWEVER, this time use the /flatMap/ function that you just wrote.
@@ -207,8 +206,7 @@ flatMap =
 flattenAgain ::
   List (List a)
   -> List a
-flattenAgain =
-  error "todo"
+flattenAgain = flatMap id
 
 -- | Convert a list of optional values to an optional list of values.
 --
