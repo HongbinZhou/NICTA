@@ -256,8 +256,10 @@ find ::
   (a -> Bool)
   -> List a
   -> Optional a
-find =
-  error "todo"
+find _ Nil = Empty
+find f (x :. xs)
+     | f x == True = Full x
+     | otherwise = find f xs
 
 -- | Determine if the length of the given list is greater than 4.
 --
@@ -275,8 +277,11 @@ find =
 lengthGT4 ::
   List a
   -> Bool
-lengthGT4 =
-  error "todo"
+lengthGT4 = lengthGT 4
+          where lengthGT _ Nil = False
+                lengthGT n (_:.xs)
+                           | n<=0 = True
+                           | otherwise = lengthGT (n-1) xs
 
 -- | Reverse a list.
 --
