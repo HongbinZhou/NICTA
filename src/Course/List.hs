@@ -297,8 +297,7 @@ lengthGT4 = lengthGT 4
 reverse ::
   List a
   -> List a
-reverse =
-  error "todo"
+reverse = foldLeft (\acc x -> x :. acc) Nil
 
 -- | Produce an infinite `List` that seeds with the given value at its head,
 -- then runs the given function for subsequent elements
@@ -310,10 +309,10 @@ reverse =
 -- [1,2,4,8]
 produce ::
   (a -> a)
-  -> a
+     -> a
   -> List a
-produce =
-  error "todo"
+produce f a = a :. Nil ++ produce f (f a)
+
 
 -- | Do anything other than reverse a list.
 -- Is it even possible?
