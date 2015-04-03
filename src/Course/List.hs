@@ -233,8 +233,21 @@ flattenAgain = flatMap id
 seqOptional ::
   List (Optional a)
   -> Optional (List a)
-seqOptional =
-  error "todo"
+seqOptional = foldRight (twiceOptional (:.)) (Full Nil)
+
+-- Note: 
+-- As: 
+--     twiceOptional :: (a -> b -> c) -> Optional a -> Optional b -> Optional c
+--     (:.) :: a -> List a -> List a
+-- So,
+--     twiceOptional (:.) :: Optional a -> Optional (List a) -> Optional (List a)
+
+-- As: 
+--     foldRight :: (a -> b -> b) -> b -> List a -> b
+--     seqOptional :: List (Optional a) -> Optional (List a)
+-- So, 
+--     foldRight (twiceOptional (:.)) (Full Nil) :: List a -> b
+
 
 -- | Find the first element in the list matching the predicate.
 --
@@ -326,8 +339,7 @@ produce f a = a :. Nil ++ produce f (f a)
 notReverse ::
   List a
   -> List a
-notReverse =
-  error "todo"
+notReverse = reverse
 
 ---- End of list exercises
 
