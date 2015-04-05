@@ -68,8 +68,10 @@ instance Apply Optional where
     Optional (a -> b)
     -> Optional a
     -> Optional b
-  (<*>) =
-    error "todo"
+
+  _ <*> Empty = Empty
+  Empty <*> _ = Empty
+  (Full f) <*> (Full a) = Full (f a)
 
 -- | Implement @Apply@ instance for reader.
 --
