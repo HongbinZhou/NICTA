@@ -95,8 +95,13 @@ instance Functor ((->) t) where
   a
   -> f b
   -> f a
-(<$) =
-  error "todo"
+(<$) = (<$>) . const
+-- Note:
+--     first thought: (<$) a x = (\_ -> a) <$> x
+--     second way   : (<$) a x = (const a) <$> x
+--     third way    : (<$) a x = ($) (const a) x
+--     fourth way   : (<$) a = ($) (const a)
+--     fifth way    : (<$) = ($) . const
 
 -- | Anonymous map producing unit value.
 --
