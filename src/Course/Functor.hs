@@ -80,8 +80,7 @@ instance Functor ((->) t) where
     (a -> b)
     -> ((->) t a)
     -> ((->) t b)
-  (<$>) =
-    error "todo"
+  (<$>) = (.)
 
 -- | Anonymous map. Maps a constant value on a functor.
 --
