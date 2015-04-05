@@ -35,8 +35,7 @@ instance Apply Id where
     Id (a -> b)
     -> Id a
     -> Id b
-  (<*>) =
-    error "todo"
+  (<*>) (Id f) (Id a) = Id (f a)
 
 -- | Implement @Apply@ instance for @List@.
 --
@@ -47,8 +46,8 @@ instance Apply List where
     List (a -> b)
     -> List a
     -> List b
-  (<*>) =
-    error "todo"
+  (<*>) Nil _ = Nil
+  (<*>) (f0:.fx) a = (f0 <$> a) ++ ( (<*>) fx a)
 
 -- | Implement @Apply@ instance for @Optional@.
 --
