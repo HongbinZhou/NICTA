@@ -120,8 +120,7 @@ void ::
   Functor f =>
   f a
   -> f ()
-void =
-  error "todo"
+void = (<$) ()
 
 -----------------------
 -- SUPPORT LIBRARIES --
