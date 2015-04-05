@@ -46,8 +46,12 @@ instance Apply List where
     List (a -> b)
     -> List a
     -> List b
-  (<*>) Nil _ = Nil
-  (<*>) (f0:.fx) a = (f0 <$> a) ++ ( (<*>) fx a)
+  -- way 1:
+  -- (<*>) Nil _ = Nil
+  -- (<*>) (f0:.fx) a = (f0 <$> a) ++ ( (<*>) fx a)
+
+  -- way 2
+  (<*>) f a = foldLeft (\acc x -> acc ++ (x <$> a) ) Nil f 
 
 -- | Implement @Apply@ instance for @Optional@.
 --
