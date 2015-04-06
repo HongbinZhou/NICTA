@@ -129,8 +129,13 @@ replicateA ::
   Int
   -> f a
   -> f (List a)
-replicateA =
-  error "todo"
+-- way 1:
+-- replicateA 0 _ = pure Nil
+-- replicateA n x = lift2 (:.) x (replicateA (n-1) x)
+
+-- way 2:
+replicateA n x = sequence $ take n $ repeat x
+
 
 -- | Filter a list with a predicate that produces an effect.
 --
