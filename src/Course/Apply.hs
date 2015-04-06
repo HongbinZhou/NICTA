@@ -94,8 +94,12 @@ instance Apply ((->) t) where
     ((->) t (a -> b))
     -> ((->) t a)
     -> ((->) t b)
-  (<*>) =
-    error "todo"
+  -- way 1: 
+  -- (<*>) g h = f
+  --       where f t = g t (h t)
+
+  -- way 2:
+  (<*>) g h = \t -> g t (h t)
 
 -- | Apply a binary function in the environment.
 --
