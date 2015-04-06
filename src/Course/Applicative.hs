@@ -46,8 +46,8 @@ class Apply f => Applicative f where
   (a -> b)
   -> f a
   -> f b
-(<$>) =
-  error "todo"
+(<$>) f a = pure f <*> a
+-- note: should done pure firstly.
 
 -- | Insert into Id.
 --
@@ -56,8 +56,7 @@ instance Applicative Id where
   pure ::
     a
     -> Id a
-  pure =
-    error "todo"
+  pure = Id
 
 -- | Insert into a List.
 --
@@ -66,8 +65,8 @@ instance Applicative List where
   pure ::
     a
     -> List a
-  pure =
-    error "todo"
+  pure = \x -> x :. Nil
+
 
 -- | Insert into an Optional.
 --
@@ -76,8 +75,7 @@ instance Applicative Optional where
   pure ::
     a
     -> Optional a
-  pure =
-    error "todo"
+  pure = Full
 
 -- | Insert into a constant function.
 --
@@ -86,8 +84,7 @@ instance Applicative ((->) t) where
   pure ::
     a
     -> ((->) t a)
-  pure =
-    error "todo"
+  pure = const
 
 -- | Sequences a list of structures to a structure of list.
 --
