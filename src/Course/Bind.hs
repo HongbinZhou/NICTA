@@ -68,10 +68,9 @@ infixr 1 =<<
   f (a -> b)
   -> f a
   -> f b
-(<*>) =
-  error "todo"
+(<*>) = error "todo"
 
-infixl 4 <*>
+-- infixl 4 <*>
 
 -- | Binds a function on the Id monad.
 --
@@ -82,8 +81,7 @@ instance Bind Id where
     (a -> Id b)
     -> Id a
     -> Id b
-  (=<<) =
-    error "todo"
+  (=<<) f (Id a) = f a
 
 -- | Binds a function on a List.
 --
@@ -94,8 +92,7 @@ instance Bind List where
     (a -> List b)
     -> List a
     -> List b
-  (=<<) =
-    error "todo"
+  (=<<) f x = flatMap f x
 
 -- | Binds a function on an Optional.
 --
@@ -106,8 +103,8 @@ instance Bind Optional where
     (a -> Optional b)
     -> Optional a
     -> Optional b
-  (=<<) =
-    error "todo"
+  (=<<) f (Full x) = f x
+  (=<<) _ Empty = Empty
 
 -- | Binds a function on the reader ((->) t).
 --
@@ -118,8 +115,8 @@ instance Bind ((->) t) where
     (a -> ((->) t b))
     -> ((->) t a)
     -> ((->) t b)
-  (=<<) =
-    error "todo"
+  (=<<) g h = f
+    where f t = g (h t) t
 
 -- | Flattens a combined structure to a single structure.
 --
