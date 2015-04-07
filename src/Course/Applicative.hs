@@ -162,35 +162,22 @@ filtering ::
   (a -> f Bool)
   -> List a
   -> f (List a)
--- filtering f Nil = pure Nil
-filtering f = foldRight (\x acc -> lift2 (++) (test3 f x) acc ) (pure Nil)
-  -- error "todo"
-  -- lift2 (:.) (lift2 test2 (f x) x) (filtering f xs)
-  -- where whole = lift2 (:.) (test f x) (filtering f xs)
+filtering f = foldRight (\x acc -> lift2 (++) (filterA f x) acc ) (pure Nil)
 
--- Note:
---      How to put a value into Applicative? Use pure!
---      So we will get [2] by:
---        lift2 (\_ y -> y) (True :. Nil) (pure 2) 
---      with some improvement:
---        lift2 seq (True :. Nil) (pure 2)
---      Another example:
---        lift2 seq (Full True) (pure 2)
---      will get: Full 2
+                    -- filterA: put element x into enviroment (using pure) if  (f Bool) is True. 
+                    -- How to test (f Bool), such as: Full True, Empty, Id True, Id False, ... ? 
+                    -- Using lift2!
 
-test3 :: Applicative f => (a -> f Bool) -> a -> f (List a)
-test3 f a = lift2 test2 (f a) (pure a)
+                    -- as: lift2 :: Apply f => (a -> b -> c) -> f a -> f b -> f c
+                    -- If we provide a function:  (Bool -> b -> List b) 
+                    -- we can get: (Bool -> b -> List b) -> f Bool -> f b -> f (List c)
+                    -- by lift2 it!
 
-test2 :: Bool -> a -> List a
-test2 True a  = a :. Nil
-test2 False _ = Nil
-
-test ::
-  Applicative f =>
-  (a -> f Bool)
-  -> a
-  -> f a
-test f a = lift2 seq (f a) (pure a)
+                    -- ifTrueA :: Bool -> t -> List t
+                    -- filterA :: Applicative f => (t -> f Bool) -> t -> f (List t)
+              where filterA h a = lift2 ifTrueA (h a) (pure a)
+                    ifTrueA True a  = a :. Nil
+                    ifTrueA False _ = Nil
 
 -----------------------
 -- SUPPORT LIBRARIES --
