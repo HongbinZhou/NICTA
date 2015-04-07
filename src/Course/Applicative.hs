@@ -162,8 +162,9 @@ filtering ::
   (a -> f Bool)
   -> List a
   -> f (List a)
-filtering f Nil = pure Nil
-filtering f (x:.xs) = error "todo"
+-- filtering f Nil = pure Nil
+filtering f = foldRight (\x acc -> lift2 (++) (test3 f x) acc ) (pure Nil)
+  -- error "todo"
   -- lift2 (:.) (lift2 test2 (f x) x) (filtering f xs)
   -- where whole = lift2 (:.) (test f x) (filtering f xs)
 
@@ -177,11 +178,12 @@ filtering f (x:.xs) = error "todo"
 --        lift2 seq (Full True) (pure 2)
 --      will get: Full 2
 
+test3 :: Applicative f => (a -> f Bool) -> a -> f (List a)
 test3 f a = lift2 test2 (f a) (pure a)
 
-test2 :: Bool -> a -> a
-test2 True a = a
-test2 _ b = b
+test2 :: Bool -> a -> List a
+test2 True a  = a :. Nil
+test2 False _ = Nil
 
 test ::
   Applicative f =>
