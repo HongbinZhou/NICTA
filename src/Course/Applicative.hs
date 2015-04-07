@@ -162,8 +162,33 @@ filtering ::
   (a -> f Bool)
   -> List a
   -> f (List a)
-filtering =
-  error "todo"
+filtering f Nil = pure Nil
+filtering f (x:.xs) = error "todo"
+  -- lift2 (:.) (lift2 test2 (f x) x) (filtering f xs)
+  -- where whole = lift2 (:.) (test f x) (filtering f xs)
+
+-- Note:
+--      How to put a value into Applicative? Use pure!
+--      So we will get [2] by:
+--        lift2 (\_ y -> y) (True :. Nil) (pure 2) 
+--      with some improvement:
+--        lift2 seq (True :. Nil) (pure 2)
+--      Another example:
+--        lift2 seq (Full True) (pure 2)
+--      will get: Full 2
+
+test3 f a = lift2 test2 (f a) (pure a)
+
+test2 :: Bool -> a -> a
+test2 True a = a
+test2 _ b = b
+
+test ::
+  Applicative f =>
+  (a -> f Bool)
+  -> a
+  -> f a
+test f a = lift2 seq (f a) (pure a)
 
 -----------------------
 -- SUPPORT LIBRARIES --
