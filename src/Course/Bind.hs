@@ -63,14 +63,51 @@ infixr 1 =<<
 --
 -- >>> ((*) <*> (+2)) 3
 -- 15
+
+-- Note:
+--      Amazing! How to use <$> (fmap) and =<< (bind) to define <*> (apply)?
+--      What we want: <*> :: f (a -> b) -> f a -> f b
+--      What we have: <$> :: (a -> b) -> f a -> f b
+--                    =<< :: (a -> f b) -> f a -> f b
+--
+--      So if we have:
+--                   (a -> b) -> f b
+--      and:
+--                   f (a -> b)
+--      Then we can get:
+--                   f b
+--      Using =<<.
+--      
+--
+--      For f (a -> b), it's =<<'s first parameter.
+--      For (a -> b) -> f b, we can get this by <$> and =<<'s second parameter (f a). 
+--      Let's use x to stand for functor (f a).
+--
+--      As:
+--                <$> :: (a -> b) -> f a -> f b
+--      then:
+--                <$> x :: (a -> b) -> f b
+--
+--      Finally:
+--               f <*> x = (<$> x) =<< f
+-- 
+--      One point had confused me a lot is, (eq1) is different with (eq2)!
+--               <$> x :: (a -> b) -> f b        (eq1)
+--               (<$>) x :: f a -> f b           (eq2)
+--      In eq1, <$> without (), it's a infix operator and only given the second parameter. 
+--      It's the same as fmap useing ``: 
+--               `P.fmap` x :: (a -> b) -> f b 
+--      While in eq2, (<$>) is a function, following by its first parameter x, and x should be a function (a -> b). 
+--      It's the same as fmap without ``:
+---               fmap x :: f a -> f b
 (<*>) ::
   Bind f =>
   f (a -> b)
   -> f a
   -> f b
-(<*>) = error "todo"
+f <*> a = (<$> a) =<< f
 
--- infixl 4 <*>
+infixl 4 <*>
 
 -- | Binds a function on the Id monad.
 --
