@@ -200,8 +200,12 @@ infixl 1 >>=
   -> (a -> f b)
   -> a
   -> f c
-(<=<) =
-  error "todo"
+-- Note: 
+--      initial version:
+--                     (<=<) g h a = join $ (<$>) g (h a)
+--      improved version:
+--                     (<=<) g h a = join $ g <$> h a
+(<=<) g h a = join $ g <$> h a
 
 infixr 1 <=<
 
