@@ -84,14 +84,14 @@ getFiles a =
 getFile ::
   FilePath
   -> IO (FilePath, Chars)
-getFile = 
+getFile =
   error "todo"
 
 printFiles ::
   List (FilePath, Chars)
   -> IO ()
-printFiles =
-  error "todo"
+printFiles l = void $ sequence $ printFile' <$> l
+               where printFile' (a,b) = printFile a b
 
 printFile ::
   FilePath
