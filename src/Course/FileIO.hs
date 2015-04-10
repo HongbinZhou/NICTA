@@ -72,8 +72,7 @@ type FilePath =
 run ::
   Chars
   -> IO ()
-run =
-  error "todo"
+run a = (getFiles $ lines a) >>= printFiles
 
 getFiles ::
   List FilePath
