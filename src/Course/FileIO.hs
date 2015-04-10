@@ -84,8 +84,7 @@ getFiles a =
 getFile ::
   FilePath
   -> IO (FilePath, Chars)
-getFile =
-  error "todo"
+getFile a = ((,) a) <$> readFile a
 
 printFiles ::
   List (FilePath, Chars)
