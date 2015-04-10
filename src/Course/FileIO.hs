@@ -78,13 +78,13 @@ run =
 getFiles ::
   List FilePath
   -> IO (List (FilePath, Chars))
-getFiles =
-  error "todo"
+getFiles a = 
+  sequence $ getFile <$> a
 
 getFile ::
   FilePath
   -> IO (FilePath, Chars)
-getFile =
+getFile = 
   error "todo"
 
 printFiles ::
