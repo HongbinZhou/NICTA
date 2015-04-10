@@ -62,8 +62,10 @@ the contents of c
 -- /Tip:/ use @getArgs@ and @run@
 main ::
   IO ()
-main =
-  error "todo"
+-- main = getArgs >>= test
+main = error "todo"
+
+test a = (void $ sequence $ run <$> a)
 
 type FilePath =
   Chars
