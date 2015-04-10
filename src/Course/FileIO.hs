@@ -96,6 +96,5 @@ printFile ::
   FilePath
   -> Chars
   -> IO ()
-printFile =
-  error "todo"
+printFile a b = putStrLn $ "==========" ++ a ++ "\n" ++ b
 
