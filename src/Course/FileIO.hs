@@ -60,16 +60,22 @@ the contents of c
 -}
 
 -- /Tip:/ use @getArgs@ and @run@
+
+-- Note: how to debug?
+--     1. set args for main: :set args files.txt files.txt
+--        And can check it by: :show args    
+--     2. set break point in line 2: :break 2 
 main ::
   IO ()
-main = getArgs >>= test1
--- main = -- getArgs >>= f
-  -- error "todo"
+main = getArgs >>= readFilesAndPrint
 
 -- test by:
---         test1 ("./share/files.txt":.Nil :: List Filename)
-test1 a = void $ sequence$  test <$> a
-test a = readFile a >>= run
+--         readFilesAndPrint ("files.txt":.Nil :: List Filename)
+readFilesAndPrint :: List Filename -> IO ()
+readFilesAndPrint a = void $ sequence $  readOneFileAndPrint <$> a
+
+readOneFileAndPrint :: Filename -> IO ()
+readOneFileAndPrint a = readFile a >>= run
 
 -- test a = (void $ sequence $ run <$> a)
 
@@ -109,5 +115,5 @@ printFile ::
   FilePath
   -> Chars
   -> IO ()
-printFile a b = putStrLn $ "==========" ++ a ++ "\n" ++ b
+printFile a b = putStrLn $ "========== " ++ a ++ "\n" ++ b
 
