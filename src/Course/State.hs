@@ -41,8 +41,8 @@ instance Functor (State s) where
     (a -> b)
     -> State s a
     -> State s b
-  (<$>) =
-      error "todo"
+  f <$> (State g)  = State h
+                     where h s' = let (a,s) = g s in (f a, s')
 
 -- | Implement the `Apply` instance for `State s`.
 -- >>> runState (pure (+1) <*> pure 0) 0
@@ -51,13 +51,16 @@ instance Functor (State s) where
 -- >>> import qualified Prelude as P
 -- >>> runState (State (\s -> ((+3), s P.++ ["apple"])) <*> State (\s -> (7, s P.++ ["banana"]))) []
 -- (10,["apple","banana"])
+
+-- ??? why the second test not the same???
+
 instance Apply (State s) where
   (<*>) ::
     State s (a -> b)
     -> State s a
     -> State s b 
-  (<*>) =
-    error "todo"
+  (State f) <*> (State g) = State h
+                            where h s' = let (a, s) = g s; (f', s'') = f s'' in (f' a, s')
 
 -- | Implement the `Applicative` instance for `State s`.
 -- >>> runState (pure 2) 0
@@ -66,8 +69,8 @@ instance Applicative (State s) where
   pure ::
     a
     -> State s a
-  pure =
-    error "todo"
+  pure a = State h
+         where h s = (a, s)
 
 -- | Implement the `Bind` instance for `State s`.
 -- >>> runState ((const $ put 2) =<< put 1) 0
@@ -77,8 +80,12 @@ instance Bind (State s) where
     (a -> State s b)
     -> State s a
     -> State s b
-  (=<<) =
+  (=<<) = 
     error "todo"
+
+  -- ???
+  -- f =<< (State g) = let (a, s) = g s in f a
+
 
 instance Monad (State s) where
 
