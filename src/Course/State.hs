@@ -80,11 +80,7 @@ instance Bind (State s) where
     (a -> State s b)
     -> State s a
     -> State s b
-  (=<<) = 
-    error "todo"
-
-  -- ???
-  -- f =<< (State g) = let (a, s) = g s in f a
+  f =<< (State g) = let (a, s) = g s in f a
 
 
 instance Monad (State s) where
@@ -125,8 +121,8 @@ get =
 put ::
   s
   -> State s ()
-put =
-  error "todo"
+put s' = State f 
+  where f _ = ((), s')
 
 -- | Find the first element in a `List` that satisfies a given predicate.
 -- It is possible that no element is found, hence an `Optional` result.
