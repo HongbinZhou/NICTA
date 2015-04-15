@@ -111,8 +111,11 @@ eval =
 -- (0,0)
 get ::
   State s s
-get =
-  error "todo"
+-- way 1:
+get = State f 
+  where f s = (s, s)
+-- way 2:
+-- get = let f s = (s, s) in State f
 
 -- | A `State` where the resulting state is seeded with the given value.
 --
