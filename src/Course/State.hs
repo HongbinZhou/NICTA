@@ -60,7 +60,7 @@ instance Apply (State s) where
     -> State s a
     -> State s b 
   (State f) <*> (State g) = State h
-                            where h s' = let (a, s) = g s; (f', s'') = f s'' in (f' a, s')
+    where h s = let (f', sf) = f s; (a, sa) = g sf in (f' a, sa)
 
 -- | Implement the `Applicative` instance for `State s`.
 -- >>> runState (pure 2) 0
