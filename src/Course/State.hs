@@ -92,8 +92,7 @@ exec ::
   State s a
   -> s
   -> s
-exec =
-  error "todo"
+exec (State f) s = let (a, s') = f s in s'
 
 -- | Run the `State` seeded with `s` and retrieve the resulting value.
 --
@@ -102,8 +101,7 @@ eval ::
   State s a
   -> s
   -> a
-eval =
-  error "todo"
+eval (State f) s = let (a, s') = f s in a
 
 -- | A `State` where the state also distributes into the produced value.
 --
