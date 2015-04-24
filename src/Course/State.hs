@@ -41,8 +41,10 @@ instance Functor (State s) where
     (a -> b)
     -> State s a
     -> State s b
-  f <$> (State g)  = State h
-                     where h s' = let (a,s) = g s in (f a, s')
+  f <$> (State g)  = State $ \s ->
+    let (a, newState) = g s
+        b = f a
+    in (b, newState)
 
 -- | Implement the `Apply` instance for `State s`.
 -- >>> runState (pure (+1) <*> pure 0) 0
@@ -52,15 +54,16 @@ instance Functor (State s) where
 -- >>> runState (State (\s -> ((+3), s P.++ ["apple"])) <*> State (\s -> (7, s P.++ ["banana"]))) []
 -- (10,["apple","banana"])
 
--- ??? why the second test not the same???
-
 instance Apply (State s) where
   (<*>) ::
     State s (a -> b)
     -> State s a
     -> State s b 
-  (State f) <*> (State g) = State h
-    where h s = let (f', sf) = f s; (a, sa) = g sf in (f' a, sa)
+  (State f) <*> (State g) = State $ \s -> 
+    let (f', newState) = f s
+        (a, newState') = g newState
+    in (f' a, newState')
+
 
 -- | Implement the `Applicative` instance for `State s`.
 -- >>> runState (pure 2) 0
@@ -69,8 +72,7 @@ instance Applicative (State s) where
   pure ::
     a
     -> State s a
-  pure a = State h
-         where h s = (a, s)
+  pure a = State $ \s -> (a, s)
 
 -- | Implement the `Bind` instance for `State s`.
 -- >>> runState ((const $ put 2) =<< put 1) 0
