@@ -80,7 +80,10 @@ instance Bind (State s) where
     (a -> State s b)
     -> State s a
     -> State s b
-  f =<< (State g) = let (a, s) = g s in f a
+  -- Note: ref: http://learnyouahaskell.com/for-a-few-monads-more
+  f =<< (State g) = State $ \s -> let (a, newState) = g s
+                                      (State h) = f a
+                                  in h newState
 
 
 instance Monad (State s) where
