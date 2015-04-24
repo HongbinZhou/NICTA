@@ -201,7 +201,14 @@ distinct = listh . S.toList . list2Set
 --
 -- >>> isHappy 7
 -- True
---
+
+-- Example:
+-- sumOfSqrt(7) = 49, 
+-- sumOfSqrt(4)+sumOfSqrt(9)=97, 
+-- sumOfSqrt(9)+sumOfSqrt(7)=130, 
+-- sumOfSqrt(1)+sumOfSqrt(3)+sumOfSqrt(0)=10
+-- sumOfSqrt(1)+sumOfSqrt(0)=1, bingo!
+
 -- >>> isHappy 42
 -- False
 --
