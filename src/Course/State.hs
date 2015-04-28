@@ -41,10 +41,18 @@ instance Functor (State s) where
     (a -> b)
     -> State s a
     -> State s b
-  f <$> (State g)  = State $ \s ->
-    let (a, newState) = g s
-        b = f a
-    in (b, newState)
+
+  -- >>> way 1
+  f <$> sa = do
+    a <- sa
+    return (f a)
+
+  -- >>> way 2
+  -- f <$> (State g)  = State $ \s ->
+  --   let (a, newState) = g s
+  --       b = f a
+  --   in (b, newState)
+
 
 -- | Implement the `Apply` instance for `State s`.
 -- >>> runState (pure (+1) <*> pure 0) 0
@@ -59,10 +67,18 @@ instance Apply (State s) where
     State s (a -> b)
     -> State s a
     -> State s b 
-  (State f) <*> (State g) = State $ \s -> 
-    let (f', newState) = f s
-        (a, newState') = g newState
-    in (f' a, newState')
+
+  -- way 1
+  sf <*> sa = do
+    f <- sf
+    a <- sa
+    return (f a)
+
+  -- way 2
+  -- (State f) <*> (State g) = State $ \s -> 
+  --   let (f', newState) = f s
+  --       (a, newState') = g newState
+  --   in (f' a, newState')
 
 
 -- | Implement the `Applicative` instance for `State s`.
@@ -83,10 +99,9 @@ instance Bind (State s) where
     -> State s a
     -> State s b
   -- Note: ref: http://learnyouahaskell.com/for-a-few-monads-more
-  f =<< (State g) = State $ \s -> let (a, newState) = g s
+  f =<< (State g) = State $ \s -> let (a, s') = g s
                                       (State h) = f a
-                                  in h newState
-
+                                  in h s'
 
 instance Monad (State s) where
 
