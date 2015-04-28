@@ -117,21 +117,17 @@ exec (State f) s = let (a, s') = f s in s'
 -- | Run the `State` seeded with `s` and retrieve the resulting value.
 --
 -- prop> \(Fun _ f) -> eval (State f) s == fst (runState (State f) s)
-eval ::
-  State s a
-  -> s
-  -> a
+eval :: State s a -> s -> a
 eval (State f) s = let (a, s') = f s in a
 
 -- | A `State` where the state also distributes into the produced value.
 --
 -- >>> runState get 0
 -- (0,0)
-get ::
-  State s s
+get :: State s s
 -- way 1:
-get = State f 
-  where f s = (s, s)
+get = State $ (\s -> (s, s))
+
 -- way 2:
 -- get = let f s = (s, s) in State f
 
@@ -139,11 +135,8 @@ get = State f
 --
 -- >>> runState (put 1) 0
 -- ((),1)
-put ::
-  s
-  -> State s ()
-put s' = State f 
-  where f _ = ((), s')
+put :: s -> State s ()
+put s = State $ (\_ -> ((), s))
 
 -- | Find the first element in a `List` that satisfies a given predicate.
 -- It is possible that no element is found, hence an `Optional` result.
