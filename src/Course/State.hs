@@ -214,8 +214,33 @@ distinct x = listh . S.toList $ exec (findM isInSet x) S.empty
 --
 -- >>> isHappy 44
 -- True
-isHappy ::
-  Integer
-  -> Bool
-isHappy =
-  error "todo"
+-- isHappy ::
+--   Integer
+--   -> Bool
+isHappy :: Integer -> Bool
+isHappy n = case (identicalSeq n) of 
+             (1:._) -> True
+             _ -> False
+
+nextNum :: State (List Integer) t -> State (List Integer) (Optional Integer)
+nextNum (State h) = State $ (\s -> let (_, l@(x:.xs)) = h s; 
+                                       v = sumOfSqrt x
+                                         in if v `elem` l 
+                                            then (Full x, l)
+                                            else (Empty, v:.l))
+
+sumOfSqrt :: Integer -> Integer
+sumOfSqrt n = foldLeft (\acc x -> acc + (P.fromIntegral ((digitToInt x) * (digitToInt x)))) 0 (listh (show n))
+
+seqNum :: List (State (List Integer) (Optional Integer))
+seqNum = produce nextNum (pure Empty)
+
+identicalSeq :: Integer -> List Integer
+identicalSeq n = snd $ runState (findM isFull seqNum) (n:.Nil)
+
+isFull :: (State (List Integer) (Optional Integer)) -> (State (List Integer) Bool)
+isFull (State h) = State $ (\s -> let (a, l) = h s in 
+                              case a of
+                               Full _ -> (True, l)
+                               _ -> (False, l))
+
