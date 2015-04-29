@@ -160,6 +160,13 @@ findM ::
 findM _ Nil = pure Empty
 findM f (x:.xs) = (\s -> if s==True then pure (Full x) else findM f xs) =<< f x
 
+
+isInSet :: Ord a => a -> State (S.Set a) Bool
+isInSet a = State $ (\s -> if S.member a s then (True, s) else (False, S.insert a s))
+
+test_isInSet :: (Bool, S.Set Integer)
+test_isInSet = runState (isInSet 2) (S.fromList [1,2,3])
+
 -- | Find the first element in a `List` that repeats.
 -- It is possible that no element repeats, hence an `Optional` result.
 --
@@ -167,18 +174,8 @@ findM f (x:.xs) = (\s -> if s==True then pure (Full x) else findM f xs) =<< f x
 --
 -- prop> case firstRepeat xs of Empty -> let xs' = hlist xs in nub xs' == xs'; Full x -> length (filter (== x) xs) > 1
 -- prop> case firstRepeat xs of Empty -> True; Full x -> let (l, (rx :. rs)) = span (/= x) xs in let (l2, r2) = span (/= x) rs in let l3 = hlist (l ++ (rx :. Nil) ++ l2) in nub l3 == l3
-firstRepeat ::
-  Ord a =>
-  List a
-  -> Optional a
-firstRepeat Nil = Empty
-firstRepeat (x:.xs)
-  | S.member x (list2Set xs) = Full x
-  | otherwise = firstRepeat xs
-
-list2Set :: Ord a => List a -> S.Set a
-list2Set Nil = S.empty
-list2Set (x:.xs) = S.insert x (list2Set xs)
+firstRepeat :: Ord a => List a -> Optional a
+firstRepeat x = eval (findM isInSet x) S.empty
 
 -- | Remove all duplicate elements in a `List`.
 -- /Tip:/ Use `filtering` and `State` with a @Data.Set#Set@.
@@ -186,13 +183,8 @@ list2Set (x:.xs) = S.insert x (list2Set xs)
 -- prop> firstRepeat (distinct xs) == Empty
 --
 -- prop> distinct xs == distinct (flatMap (\x -> x :. x :. Nil) xs)
-distinct ::
-  Ord a =>
-  List a
-  -> List a
-distinct = listh . S.toList . list2Set
-
-
+distinct :: Ord a => List a -> List a
+distinct x = listh . S.toList $ exec (findM isInSet x) S.empty
 
 -- | A happy number is a positive integer, where the sum of the square of its digits eventually reaches 1 after repetition.
 -- In contrast, a sad number (not a happy number) is where the sum of the square of its digits never reaches 1
