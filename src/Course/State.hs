@@ -214,9 +214,6 @@ distinct x = listh . S.toList $ exec (findM isInSet x) S.empty
 --
 -- >>> isHappy 44
 -- True
--- isHappy ::
---   Integer
---   -> Bool
 isHappy :: Integer -> Bool
 isHappy n = case (identicalSeq n) of 
              (1:._) -> True
