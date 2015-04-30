@@ -234,7 +234,11 @@ seqNum = produce nextNum (pure Empty)
 
 identicalSeq :: Integer -> List Integer
 identicalSeq n = snd $ runState (findM isFull seqNum) (n:.Nil)
+-- eg: identicalSeq 3, is: [16,4,20,42,145,89,58,37,61,65,81,9,3]
+--     identicalSeq 7, is: [1,10,130,97,49,7], this is the happy one!
 
+
+-- Test if (State (List Integer) (Optional Integer))'s value is (Full _)
 isFull :: (State (List Integer) (Optional Integer)) -> (State (List Integer) Bool)
 isFull (State h) = State $ (\s -> let (a, l) = h s in 
                               case a of
