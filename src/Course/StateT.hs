@@ -127,16 +127,14 @@ execT ::
   StateT s f a
   -> s
   -> f s
-execT =
-  error "todo"
+execT (StateT h) s = snd <$> h s
 
 -- | Run the `State` seeded with `s` and retrieve the resulting state.
 exec' ::
   State' s a
   -> s
   -> s
-exec' =
-  error "todo"
+exec' h s = snd $ runState' h s
 
 -- | Run the `StateT` seeded with `s` and retrieve the resulting value.
 evalT ::
@@ -144,16 +142,14 @@ evalT ::
   StateT s f a
   -> s
   -> f a
-evalT =
-  error "todo"
+evalT (StateT h) s = fst <$> h s
 
 -- | Run the `State` seeded with `s` and retrieve the resulting value.
 eval' ::
   State' s a
   -> s
   -> a
-eval' =
-  error "todo"
+eval' h s = fst $ runState' h s
 
 -- | A `StateT` where the state also distributes into the produced value.
 --
