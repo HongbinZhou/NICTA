@@ -215,8 +215,18 @@ data OptionalT f a =
 -- >>> runOptionalT $ (+1) <$> OptionalT (Full 1 :. Empty :. Nil)
 -- [Full 2,Empty]
 instance Functor f => Functor (OptionalT f) where
-  (<$>) =
-    error "todo"
+
+  -- >>> Initial version 1:
+  -- f <$> (OptionalT x) = OptionalT ( f' <$> x )
+  -- where f' (Full a) = Full (f a)
+  --       f' Empty = Empty
+
+  -- >>> Initial version 2:
+  -- f <$> (OptionalT x) = OptionalT ( f' <$> x )
+  --   where f' a = f <$> a
+
+  -- Improved version:
+  f <$> (OptionalT x) = OptionalT ( (<$>) f <$> x )
 
 -- | Implement the `Apply` instance for `OptionalT f` given a Apply f.
 --
