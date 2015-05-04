@@ -158,8 +158,7 @@ eval' h s = fst $ runState' h s
 getT ::
   Monad f =>
   StateT s f s
-getT =
-  error "todo"
+getT = StateT $ (\s -> pure (s, s))
 
 -- | A `StateT` where the resulting state is seeded with the given value.
 --
@@ -172,8 +171,7 @@ putT ::
   Monad f =>
   s
   -> StateT s f ()
-putT =
-  error "todo"
+putT s = StateT $ (\_ -> pure ((), s))
 
 -- | Remove all duplicate elements in a `List`.
 --
