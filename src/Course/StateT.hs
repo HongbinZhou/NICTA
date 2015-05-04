@@ -108,8 +108,8 @@ type State' s a =
 state' ::
   (s -> (a, s))
   -> State' s a
-state' =
-  error "todo"
+state' f =
+  StateT $ (\s -> Id (f s))
 
 -- | Provide an unwrapper for `State'` values.
 --
@@ -119,9 +119,8 @@ runState' ::
   State' s a
   -> s
   -> (a, s)
-runState' =
-  error "todo"
-
+runState' (StateT h) s = runId (h s)
+    
 -- | Run the `StateT` seeded with `s` and retrieve the resulting state.
 execT ::
   Functor f =>
