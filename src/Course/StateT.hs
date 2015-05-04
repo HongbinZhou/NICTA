@@ -54,13 +54,18 @@ instance Functor f => Functor (StateT s f) where
 --
 -- >>> runStateT (StateT (\s -> ((+2), s P.++ [1]) :. ((+3), s P.++ [1]) :. Nil) <*> (StateT (\s -> (2, s P.++ [2]) :. Nil))) [0]
 -- [(4,[0,1,2]),(5,[0,1,2])]
+
+-- ????? Need pay further attention! ?????
+-- Compare with <*>'s impl in Bind.hs
 instance Bind f => Apply (StateT s f) where
   (<*>) ::
     StateT s f (a -> b)
     -> StateT s f a
     -> StateT s f b
-  (<*>) =
-    error "todo"
+  StateT g <*> StateT h = StateT $ (\s -> 
+                                     (\(f, x) -> (\(a, y) -> (f a, y))
+                                                 <$> h x)
+                                     =<< g s)
 
 -- | Implement the `Applicative` instance for @StateT s f@ given a @Applicative f@.
 --
@@ -83,8 +88,12 @@ instance Monad f => Bind (StateT s f) where
     (a -> StateT s f b)
     -> StateT s f a
     -> StateT s f b
-  (=<<) =
-    error "todo"
+  f =<< (StateT g) = StateT $ 
+                     (\s -> do
+                         (a, s') <- g s
+                         runStateT (f a) s')
+     
+
 
 instance Monad f => Monad (StateT s f) where
 
