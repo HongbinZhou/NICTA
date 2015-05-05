@@ -311,8 +311,7 @@ instance Applicative (Logger l) where
 -- >>> (\a -> Logger (listh [4,5]) (a+3)) =<< Logger (listh [1,2]) 3
 -- Logger [1,2,4,5] 6
 instance Bind (Logger l) where
-  (=<<) =
-    error "todo"
+  f =<< (Logger h a) = let Logger g b = f a in Logger (h++g) b
 
 instance Monad (Logger l) where
 
