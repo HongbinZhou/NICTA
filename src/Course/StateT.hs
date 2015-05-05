@@ -235,6 +235,18 @@ instance Functor f => Functor (OptionalT f) where
 
 -- Note: Copied from https://github.com/tonymorris/course/blob/master/src/Course/StateT.hs. :( 
 instance Apply f => Apply (OptionalT f) where
+  -- Note: 
+  --       What we want:
+  --            <*> :: (f (Optional (a->b))) <*> (f (Optional a)) = f (Optional b)
+  --  
+  --       For:  (OptionalT f) <*> (OptionalT a)
+  --            
+  --            f :: f (Optional (a->b))
+  --            a :: f (Optional a) 
+  --            <*> :: Optional (a->b) <*> Optional a = Optional b
+  --            lift2 :: Apply f => (a -> b -> c) -> f a -> f b -> f c
+  --           lift2 <*> f a :: f (Optional b)
+
   (OptionalT f) <*> (OptionalT a)  = OptionalT (lift2 (<*>) f a)
 
 -- | Implement the `Applicative` instance for `OptionalT f` given a Applicative f.
@@ -246,8 +258,24 @@ instance Applicative f => Applicative (OptionalT f) where
 -- >>> runOptionalT $ (\a -> OptionalT (Full (a+1) :. Full (a+2) :. Nil)) =<< OptionalT (Full 1 :. Empty :. Nil)
 -- [Full 2,Full 3,Empty]
 instance Monad f => Bind (OptionalT f) where
-  (=<<) =
-    error "todo"
+  -- Note: 
+  --      What we want:
+  --           (=<<) :: (a -> f (Optional b)) -> (f (Optional a)) -> (f (Optional b))
+  --      For:   f =<< (OptionalT a)
+  --      The type is:
+  --           (a -> f (Optional b)) =<< f (Optional a)
+  --      Notice the type of f:
+  --           f :: a -> f (Optional b), !!!NOT: ((Optional a) -> f (Optional b)) !!!
+  --      We need to get 'a' out of f (Optional a), feed it if not Empty.
+
+  f =<< (OptionalT a) = 
+    OptionalT (do
+                  x <- a
+                  case x of 
+                   Empty -> pure Empty
+                   Full s -> runOptionalT (f s))
+
+  
 
 instance Monad f => Monad (OptionalT f) where
 
