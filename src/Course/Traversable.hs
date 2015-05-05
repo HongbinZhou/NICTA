@@ -33,5 +33,12 @@ instance Traversable List where
     (a -> f b)
     -> List a
     -> f (List b)
+  -- Note:
+  --      f a :: f b
+  --      (:.) :: b -> List b -> List b
+  --      <$> :: (a -> b) -> f a -> f b
+  --      (:.) <$> f a = (b -> List b -> List b) <$> f b :: f (List b -> List b)
+  --      <*> :: f (a -> b) -> f a -> f b
+  --      f (List b -> List b) <*> f (List b) = f (List b)
   traverse f =
     foldRight (\a b -> (:.) <$> f a <*> b) (pure Nil)
