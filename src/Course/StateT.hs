@@ -239,8 +239,7 @@ instance Apply f => Apply (OptionalT f) where
 
 -- | Implement the `Applicative` instance for `OptionalT f` given a Applicative f.
 instance Applicative f => Applicative (OptionalT f) where
-  pure =
-    error "todo"
+  pure a = OptionalT (pure (pure a))
 
 -- | Implement the `Bind` instance for `OptionalT f` given a Monad f.
 --
