@@ -232,9 +232,10 @@ instance Functor f => Functor (OptionalT f) where
 --
 -- >>> runOptionalT $ OptionalT (Full (+1) :. Full (+2) :. Nil) <*> OptionalT (Full 1 :. Empty :. Nil)
 -- [Full 2,Empty,Full 3,Empty]
+
+-- Note: Copied from https://github.com/tonymorris/course/blob/master/src/Course/StateT.hs. :( 
 instance Apply f => Apply (OptionalT f) where
-  (<*>) =
-    error "todo"
+  (OptionalT f) <*> (OptionalT a)  = OptionalT (lift2 (<*>) f a)
 
 -- | Implement the `Applicative` instance for `OptionalT f` given a Applicative f.
 instance Applicative f => Applicative (OptionalT f) where
