@@ -652,8 +652,8 @@ instance Apply MaybeListZipper where
 --
 -- prop> all . (==) <*> take n . rights . pure
 instance Applicative ListZipper where
-  pure =
-    error "todo"
+  pure x = ListZipper (repeat x) x (repeat x)
+
 
 -- | Implement the `Applicative` instance for `MaybeListZipper`.
 --
@@ -663,8 +663,7 @@ instance Applicative ListZipper where
 --
 -- prop> let is (IsZ z) = z in all . (==) <*> take n . rights . is . pure
 instance Applicative MaybeListZipper where
-  pure =
-    error "todo"
+  pure x = IsZ (pure x)
 
 -- | Implement the `Extend` instance for `ListZipper`.
 -- This implementation "visits" every possible zipper value derivable from a given zipper (i.e. all zippers to the left and right).
