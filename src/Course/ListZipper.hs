@@ -330,8 +330,8 @@ moveRightLoop z@(ListZipper l a r) =
 moveLeft ::
   ListZipper a
   -> MaybeListZipper a
-moveLeft =
-  error "todo"
+moveLeft (ListZipper Nil _ _) = IsNotZ
+moveLeft a = (IsZ . moveLeftLoop) a
 
 -- | Move the zipper one position to the right.
 --
@@ -343,8 +343,8 @@ moveLeft =
 moveRight ::
   ListZipper a
   -> MaybeListZipper a
-moveRight =
-  error "todo"
+moveRight (ListZipper _ _ Nil) = IsNotZ
+moveRight a = (IsZ . moveRightLoop) a
 
 -- | Swap the current focus with the value to the left of focus.
 --
