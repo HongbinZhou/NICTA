@@ -512,8 +512,7 @@ nth ::
   Int
   -> ListZipper a
   -> MaybeListZipper a
-nth =
-  error "todo"
+nth n z@(ListZipper l _ _) = moveRightN (n-(length l)) z
 
 -- | Return the absolute position of the current focus in the zipper.
 --
