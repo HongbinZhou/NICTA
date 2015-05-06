@@ -467,8 +467,10 @@ moveLeftN' ::
   Int
   -> ListZipper a
   -> Either Int (ListZipper a)
-moveLeftN' =
-  error "todo"
+moveLeftN' n z@(ListZipper l _ r ) = 
+  case moveLeftN n z of 
+   IsZ a -> Right a
+   IsNotZ -> Left (if n > 0 then length l else length r )
 
 -- | Move the focus right the given number of positions. If the value is negative, move left instead.
 -- If the focus cannot be moved, the given number of times, return the value by which it can be moved instead.
@@ -491,8 +493,10 @@ moveRightN' ::
   Int
   -> ListZipper a
   -> Either Int (ListZipper a)
-moveRightN' =
-  error "todo"
+moveRightN' n z@(ListZipper l _ r ) = 
+  case moveRightN n z of 
+   IsZ a -> Right a
+   IsNotZ -> Left (if n > 0 then length r else length l )
 
 -- | Move the focus to the given absolute position in the zipper. Traverse the zipper only to the extent required.
 --
