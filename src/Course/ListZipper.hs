@@ -536,8 +536,9 @@ index (ListZipper l _ _) = length l
 end ::
   ListZipper a
   -> ListZipper a
-end =
-  error "todo"
+end z = case moveRight z of
+         IsNotZ -> z
+         (IsZ z') -> end z'
 
 -- | Move the focus to the start of the zipper.
 --
@@ -550,8 +551,9 @@ end =
 start ::
   ListZipper a
   -> ListZipper a
-start =
-  error "todo"
+start z = case moveLeft z of
+           IsNotZ -> z
+           (IsZ z') -> start z'
 
 -- | Delete the current focus and pull the left values to take the empty position.
 --
