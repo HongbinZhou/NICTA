@@ -384,8 +384,8 @@ swapRight (ListZipper l a (x:.xs)) = IsZ (ListZipper l x (a:.xs))
 dropLefts ::
   ListZipper a
   -> ListZipper a
-dropLefts =
-  error "todo"
+dropLefts (ListZipper _ a r) = ListZipper Nil a r
+
 
 -- | Drop all values to the right of the focus.
 --
@@ -399,8 +399,7 @@ dropLefts =
 dropRights ::
   ListZipper a
   -> ListZipper a
-dropRights =
-  error "todo"
+dropRights (ListZipper l a _) = ListZipper l a Nil
 
 -- | Move the focus left the given number of positions. If the value is negative, move right instead.
 --
