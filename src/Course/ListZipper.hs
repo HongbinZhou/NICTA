@@ -356,8 +356,8 @@ moveRight a = (IsZ . moveRightLoop) a
 swapLeft ::
   ListZipper a
   -> MaybeListZipper a
-swapLeft =
-  error "todo"
+swapLeft (ListZipper Nil _ _ )= IsNotZ
+swapLeft (ListZipper (x:.xs) a r) = IsZ (ListZipper (a:.xs) x r)
 
 -- | Swap the current focus with the value to the right of focus.
 --
@@ -369,8 +369,8 @@ swapLeft =
 swapRight ::
   ListZipper a
   -> MaybeListZipper a
-swapRight =
-  error "todo"
+swapRight (ListZipper _ _ Nil)= IsNotZ
+swapRight (ListZipper l a (x:.xs)) = IsZ (ListZipper l x (a:.xs))
 
 -- | Drop all values to the left of the focus.
 --
