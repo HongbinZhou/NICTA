@@ -705,8 +705,20 @@ test_unfoldr f z = unfoldr (\a -> case moveLeft a of
 -- >>> id <<= (IsZ (zipper [2,1] 3 [4,5]))
 -- [[1] >2< [3,4,5],[] >1< [2,3,4,5]] >[2,1] >3< [4,5]< [[3,2,1] >4< [5],[4,3,2,1] >5< []]
 instance Extend MaybeListZipper where
-  (<<=) =
-    error "todo"
+  (<<=) :: (MaybeListZipper a -> b) -> MaybeListZipper a -> MaybeListZipper b
+  _ <<= IsNotZ = IsNotZ
+
+  -- ||| version 1, key point is: 
+  --         f':: ListZipper a -> b
+  --     as we have: f :: MaybeListZipper a -> b
+  --     we can define: f' z = f (IsZ z) 
+
+  -- f <<= (IsZ z) = IsZ (f' <<= z)
+  --                 where f' z' = f (IsZ z')
+
+  -- ||| version 2
+  f <<= (IsZ z) = IsZ (f.IsZ <<= z)
+
 
 -- | Implement the `Comonad` instance for `ListZipper`.
 -- This implementation returns the current focus of the zipper.
