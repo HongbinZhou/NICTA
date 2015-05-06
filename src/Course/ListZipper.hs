@@ -523,8 +523,7 @@ nth n z@(ListZipper l _ _) = moveRightN (n-(length l)) z
 index ::
   ListZipper a
   -> Int
-index =
-  error "todo"
+index (ListZipper l _ _) = length l
 
 -- | Move the focus to the end of the zipper.
 --
