@@ -256,9 +256,11 @@ findLeft ::
   (a -> Bool)
   -> ListZipper a
   -> MaybeListZipper a
-findLeft =
-  error "todo"
-    
+findLeft f (ListZipper l a r) = 
+  case break f l of 
+   (_, Nil) -> IsNotZ
+   (y, (z:.zz)) -> IsZ (ListZipper zz z (reverse y ++ a:.r))
+
 -- | Seek to the right for a location matching a predicate, starting from the
 -- current one.
 --
