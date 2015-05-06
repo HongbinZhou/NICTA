@@ -283,8 +283,11 @@ findRight ::
   (a -> Bool)
   -> ListZipper a
   -> MaybeListZipper a
-findRight =
-  error "todo"
+findRight f (ListZipper l a r) = 
+  case break f r of 
+   (_, Nil) -> IsNotZ
+   (y, (z:.zz)) -> IsZ (ListZipper (reverse y ++ a:.l) z zz)
+
 
 -- | Move the zipper left, or if there are no elements to the left, go to the far right.
 --
