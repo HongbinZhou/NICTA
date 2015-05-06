@@ -639,8 +639,9 @@ instance Apply ListZipper where
 -- >>> IsNotZ <*> IsNotZ
 -- ><
 instance Apply MaybeListZipper where
-  (<*>) =
-    error "todo"
+  IsNotZ <*> _ = IsNotZ
+  _ <*> IsNotZ = IsNotZ
+  (IsZ a) <*> (IsZ b) = IsZ (a <*> b)
 
 -- | Implement the `Applicative` instance for `ListZipper`.
 -- This implementation produces an infinite list zipper (to both left and right).
