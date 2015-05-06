@@ -620,8 +620,8 @@ insertPushRight a (ListZipper l x r) = ListZipper l a (x:.r)
 -- >>> zipper [(+2), (+10)] (*2) [(*3), (4*), (5+)] <*> zipper [3,2,1] 4 [5,6,7]
 -- [5,12] >8< [15,24,12]
 instance Apply ListZipper where
-  (<*>) =
-    error "todo"
+  (ListZipper fl fa fr) <*> (ListZipper l a r) = 
+    ListZipper (zipWith ($) fl l) (fa a) (zipWith ($) fr r)
 
 -- | Implement the `Apply` instance for `MaybeListZipper`.
 --
