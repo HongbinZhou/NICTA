@@ -673,8 +673,27 @@ instance Applicative MaybeListZipper where
 -- >>> id <<= (zipper [2,1] 3 [4,5])
 -- [[1] >2< [3,4,5],[] >1< [2,3,4,5]] >[2,1] >3< [4,5]< [[3,2,1] >4< [5],[4,3,2,1] >5< []]
 instance Extend ListZipper where
-  (<<=) =
-    error "todo"
+  -- (<<=) =
+  --   error "todo"
+  -- Note: 
+  --       The difficult part is how to generate (List b)
+  --       We can't do: moveLeft on b directly, but we can get b from a!
+  --       a' = moveLeft a
+  --       b' = f a'
+  (<<=) ::  (ListZipper a -> b) -> ListZipper a -> ListZipper b
+  f <<= z = ListZipper l x r
+            where l = unfoldr (\a -> case moveLeft a of 
+                                      IsNotZ -> Empty
+                                      IsZ a' -> Full (f a', a')) z
+                  x = f z
+                  r = unfoldr (\a -> case moveRight a of 
+                                      IsNotZ -> Empty
+                                      IsZ a' -> Full (f a', a')) z
+
+test_unfoldr :: (ListZipper a -> b) -> ListZipper a -> List b
+test_unfoldr f z = unfoldr (\a -> case moveLeft a of 
+                           IsNotZ -> Empty
+                           IsZ a' -> Full (f a', a')) z
 
 -- | Implement the `Extend` instance for `MaybeListZipper`.
 -- This instance will use the `Extend` instance for `ListZipper`.
