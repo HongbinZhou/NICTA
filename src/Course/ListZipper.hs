@@ -299,8 +299,11 @@ findRight f (ListZipper l a r) =
 moveLeftLoop ::
   ListZipper a
   -> ListZipper a
-moveLeftLoop =
-  error "todo"
+moveLeftLoop z@(ListZipper l a r) = 
+  case l of 
+   Nil -> let (x:.xs) = reverse (toList z) in ListZipper xs x Nil
+   (x:.xs) -> ListZipper xs x (a:.r)
+
 
 -- | Move the zipper right, or if there are no elements to the right, go to the far left.
 --
@@ -312,8 +315,10 @@ moveLeftLoop =
 moveRightLoop ::
   ListZipper a
   -> ListZipper a
-moveRightLoop =
-  error "todo"
+moveRightLoop z@(ListZipper l a r) = 
+  case r of 
+   Nil -> let (x:.xs)=(toList z) in ListZipper Nil x xs
+   (x:.xs) -> ListZipper (a:.l) x xs
 
 -- | Move the zipper one position to the left.
 --
