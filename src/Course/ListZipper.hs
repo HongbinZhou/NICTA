@@ -594,8 +594,7 @@ insertPushLeft ::
   a
   -> ListZipper a
   -> ListZipper a
-insertPushLeft =
-  error "todo"
+insertPushLeft a (ListZipper l x r) = (ListZipper (x:.l) a r)
 
 -- | Insert at the current focus and push the right values to make way for the new position.
 --
@@ -610,8 +609,8 @@ insertPushRight ::
   a
   -> ListZipper a
   -> ListZipper a
-insertPushRight =
-  error "todo"
+insertPushRight a (ListZipper l x r) = ListZipper l a (x:.r)
+
 
 -- | Implement the `Apply` instance for `ListZipper`.
 -- This implementation zips functions with values by function application.
