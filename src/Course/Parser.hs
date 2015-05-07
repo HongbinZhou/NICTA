@@ -83,10 +83,8 @@ valueParser a = P $ (\i -> Result i a)
 --
 -- >>> isErrorResult (parse failed "abc")
 -- True
-failed ::
-  Parser a
-failed =
-  error "todo"
+failed :: Parser a
+failed = P $ (\_ -> ErrorResult Failed)
 
 -- | Return a parser that succeeds with a character off the input or fails with an error if the input is empty.
 --
