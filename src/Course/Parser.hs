@@ -235,8 +235,8 @@ infixl 3 |||
 list ::
   Parser a
   -> Parser (List a)
-list =
-  error "todo"
+list k =
+  list1 k ||| valueParser Nil
 
 -- | Return a parser that produces at least one value from the given parser then
 -- continues producing a list of values from the given parser (to ultimately produce a non-empty list).
@@ -252,11 +252,18 @@ list =
 --
 -- >>> isErrorResult (parse (list1 (character *> valueParser 'v')) "")
 -- True
+
+-- Note:
+--      k :: Parser a     
+--      k' :: a
+--      list k :: Parser (List a)
+--      kk' :: List a
 list1 ::
   Parser a
   -> Parser (List a)
-list1 =
-  error "todo"
+list1 k =
+  flbindParser k (\k' -> flbindParser (list k) (\kk' ->
+                                                 valueParser (k' :. kk')))
 
 -- | Return a parser that produces a character but fails if
 --
