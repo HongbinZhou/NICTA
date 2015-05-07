@@ -271,11 +271,10 @@ list1 =
 --
 -- >>> isErrorResult (parse (satisfy isUpper) "abc")
 -- True
-satisfy ::
-  (Char -> Bool)
-  -> Parser Char
-satisfy =
-  error "todo"
+satisfy :: (Char -> Bool) -> Parser Char
+satisfy f = P $ (\(x:.xs) -> if f x 
+                             then Result xs x
+                             else ErrorResult Failed)
 
 -- | Return a parser that produces the given character but fails if
 --
