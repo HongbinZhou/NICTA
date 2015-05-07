@@ -180,8 +180,9 @@ flbindParser =
   Parser a
   -> Parser b
   -> Parser b
-(>>>) =
-  error "todo"
+(P g) >>> (P h) = P $ (\i -> case g i of 
+                              Result i' _ -> h i'
+                              ErrorResult x -> ErrorResult x)
 
 -- | Return a parser that tries the first parser for a successful value.
 --
