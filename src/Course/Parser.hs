@@ -490,16 +490,18 @@ firstNameParser =
          (many lower)) upper
 
 -- version 2
-appendPaser :: Parser a -> Parser (List a) -> Parser (List a)
-appendPaser x y = 
+appendParser :: Parser a -> Parser (List a) -> Parser (List a)
+appendParser x y = 
   bindParser 
   (\a -> bindParser 
          (\as -> valueParser (a:.as))
          y) x
 
 firstNameParser' :: Parser Chars
-firstNameParser' = appendPaser upper (many lower)
+firstNameParser' = appendParser upper (many lower)
 
+addParser :: Parser (List a)-> List (Parser a) -> Parser (List a)
+addParser = foldRight (\x acc -> appendParser x acc)
 -- | Write a parser for Person.surname.
 --
 -- /Surname: string that starts with a capital letter and is followed by 5 or more lower-case letters./
@@ -516,8 +518,7 @@ firstNameParser' = appendPaser upper (many lower)
 -- True
 surnameParser ::
   Parser Chars
-surnameParser =
-  error "todo"
+surnameParser = addParser (many lower) (upper:.lower:.lower:.lower:.lower:.lower:.Nil)
 
 -- | Write a parser for Person.smoker.
 --
