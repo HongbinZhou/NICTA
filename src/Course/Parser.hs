@@ -442,8 +442,7 @@ thisMany ::
   Int
   -> Parser a
   -> Parser (List a)
-thisMany =
-  error "todo"
+thisMany n = sequenceParser . replicate n
 
 -- | Write a parser for Person.age.
 --
