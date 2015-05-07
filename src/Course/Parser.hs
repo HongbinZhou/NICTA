@@ -109,8 +109,9 @@ mapParser ::
   (a -> b)
   -> Parser a
   -> Parser b
-mapParser =
-  error "todo"
+mapParser f (P p) = P $ (\i -> case p i of
+                                Result i' a -> Result i' (f a)
+                                ErrorResult e -> ErrorResult e)
 
 -- | This is @mapParser@ with the arguments flipped.
 -- It might be more helpful to use this function if you prefer this argument order.
