@@ -205,8 +205,9 @@ flbindParser =
   Parser a
   -> Parser a
   -> Parser a
-(|||) =
-  error "todo"
+(P g) ||| (P h) = P $ (\i -> case g i of 
+                              Result _ _ -> g i
+                              ErrorResult _ -> h i)
 
 infixl 3 |||
 
