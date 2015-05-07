@@ -279,9 +279,11 @@ list1 k =
 -- >>> isErrorResult (parse (satisfy isUpper) "abc")
 -- True
 satisfy :: (Char -> Bool) -> Parser Char
-satisfy f = P $ (\(x:.xs) -> if f x 
-                             then Result xs x
-                             else ErrorResult Failed)
+satisfy f = P $ (\s -> case s of 
+                        Nil -> ErrorResult Failed
+                        (x:.xs) -> if f x 
+                                   then Result xs x
+                                   else ErrorResult Failed)
 
 -- | Return a parser that produces the given character but fails if
 --
@@ -324,8 +326,8 @@ digit = satisfy isDigit
 -- True
 natural ::
   Parser Int
-natural =
-  error "todo"
+natural = bindParser (\a -> let Full x = read a 
+                            in valueParser x) (list1 digit)
 
 --
 -- | Return a parser that produces a space character but fails if
