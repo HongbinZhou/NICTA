@@ -460,8 +460,7 @@ thisMany n = sequenceParser . replicate n
 -- True
 ageParser ::
   Parser Int
-ageParser =
-  error "todo"
+ageParser = natural
 
 -- | Write a parser for Person.firstName.
 -- /First Name: non-empty string that starts with a capital letter and is followed by zero or more lower-case letters/
@@ -473,10 +472,22 @@ ageParser =
 --
 -- >>> isErrorResult (parse firstNameParser "abc")
 -- True
+--      
+many :: Parser a -> Parser (List a)
+many p = bindParser 
+          (\a -> bindParser 
+                 (\as -> valueParser (a:.as))
+                 (many p))
+          p ||| valueParser Nil
+
 firstNameParser ::
   Parser Chars
-firstNameParser =
-  error "todo"
+firstNameParser = 
+  bindParser 
+  (\a -> bindParser 
+         (\as -> valueParser (a:.as))
+         (many lower)) upper
+
 
 -- | Write a parser for Person.surname.
 --
