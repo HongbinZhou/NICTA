@@ -147,8 +147,11 @@ bindParser ::
   (a -> Parser b)
   -> Parser a
   -> Parser b
-bindParser =
-  error "todo"
+bindParser f (P g) =
+  P $ (\i -> case g i of
+                   Result i' a -> parse (f a) i' 
+                   ErrorResult x -> ErrorResult x)
+
 
 -- | This is @bindParser@ with the arguments flipped.
 -- It might be more helpful to use this function if you prefer this argument order.
