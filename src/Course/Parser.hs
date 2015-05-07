@@ -397,11 +397,36 @@ alpha = satisfy isAlpha
 --
 -- >>> isErrorResult (parse (sequenceParser (character :. is 'x' :. upper :. Nil)) "abCdef")
 -- True
+
+-- Note:
+--      acc :: Parser (List a)
+--      x   :: Parser a
+--      aa  :: List a
 sequenceParser ::
   List (Parser a)
   -> Parser (List a)
-sequenceParser =
-  error "todo"
+sequenceParser = 
+  foldRight (\x acc -> 
+             bindParser (\a -> 
+                          bindParser (\as -> 
+                                       valueParser (a :. as)) acc) x)
+  (valueParser Nil)
+
+-- ???????????????????????????????????????????
+-- ????? Why it failed when use foldLeft ?????
+-- ???????????????????????????????????????????
+-- λ> parse (sequenceParser' (character :. is 'x' :. upper :. Nil)) "axCdef"
+-- Parse failed
+
+sequenceParser' ::
+  List (Parser a)
+  -> Parser (List a)
+sequenceParser' = 
+  foldLeft (\acc x -> 
+             bindParser (\a -> 
+                          bindParser (\as -> 
+                                       valueParser (a :. as)) acc) x)
+  (valueParser Nil)
 
 -- | Return a parser that produces the given number of values off the given parser.
 -- This parser fails if the given parser fails in the attempt to produce the given number of values.

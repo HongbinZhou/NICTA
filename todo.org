@@ -1,3 +1,8 @@
 1. Parser.hs
-   list
-   list1
+   - list
+   - list1
+   - Why it failed when use foldLeft?
+     #+begin_src haskell
+     λ> parse (sequenceParser' (character :. is 'x' :. upper :. Nil)) "axCdef"
+     Parse failed
+     #+end_src
