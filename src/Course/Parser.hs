@@ -76,11 +76,8 @@ unexpectedCharParser c =
 --
 -- >>> parse (valueParser 3) "abc"
 -- Result >abc< 3
-valueParser ::
-  a
-  -> Parser a
-valueParser =
-  error "todo"
+valueParser :: a -> Parser a
+valueParser a = P $ (\i -> Result i a)
 
 -- | Return a parser that always fails with the given error.
 --
