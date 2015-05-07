@@ -283,10 +283,8 @@ satisfy f = P $ (\(x:.xs) -> if f x
 --   * The produced character is not equal to the given character.
 --
 -- /Tip:/ Use the @satisfy@ function.
-is ::
-  Char -> Parser Char
-is =
-  error "todo"
+is :: Char -> Parser Char
+is c = satisfy (==c)
 
 -- | Return a parser that produces a character between '0' and '9' but fails if
 --
@@ -295,10 +293,8 @@ is =
 --   * The produced character is not a digit.
 --
 -- /Tip:/ Use the @satisfy@ and @Data.Char#isDigit@ functions.
-digit ::
-  Parser Char
-digit =
-  error "todo"
+digit :: Parser Char
+digit = satisfy isDigit
 
 -- | Return a parser that produces zero or a positive integer but fails if
 --
