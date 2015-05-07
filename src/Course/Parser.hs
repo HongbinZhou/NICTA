@@ -480,6 +480,7 @@ many p = bindParser
                  (many p))
           p ||| valueParser Nil
 
+-- version 1
 firstNameParser ::
   Parser Chars
 firstNameParser = 
@@ -488,6 +489,16 @@ firstNameParser =
          (\as -> valueParser (a:.as))
          (many lower)) upper
 
+-- version 2
+appendPaser :: Parser a -> Parser (List a) -> Parser (List a)
+appendPaser x y = 
+  bindParser 
+  (\a -> bindParser 
+         (\as -> valueParser (a:.as))
+         y) x
+
+firstNameParser' :: Parser Chars
+firstNameParser' = appendPaser upper (many lower)
 
 -- | Write a parser for Person.surname.
 --
