@@ -93,10 +93,10 @@ failed = P $ (\_ -> ErrorResult Failed)
 --
 -- >>> isErrorResult (parse character "")
 -- True
-character ::
-  Parser Char
-character =
-  error "todo"
+character :: Parser Char
+character =  P $ (\i -> case i of
+                         x:.xs -> Result xs x
+                         Nil -> ErrorResult Failed)
 
 -- | Return a parser that maps any succeeding result with the given function.
 --
