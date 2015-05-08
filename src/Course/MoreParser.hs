@@ -156,8 +156,7 @@ option x z = z ||| pure x
 -- True
 digits1 ::
   Parser Chars
-digits1 =
-  error "todo"
+digits1 = list1 digit
 
 -- | Write a function that parses one of the characters in the given string.
 --
