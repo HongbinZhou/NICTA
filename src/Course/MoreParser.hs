@@ -211,9 +211,12 @@ between ::
   -> Parser c
   -> Parser a
   -> Parser a
-between =
-  error "todo"
-
+between o c a = do
+  _ <- o                        -- TODO, can't it just: o??
+  a' <- a 
+  _ <- c
+  return a'
+  
 -- | Write a function that applies the given parser in between the two given characters.
 --
 -- /Tip:/ Use `between` and `charTok`.
