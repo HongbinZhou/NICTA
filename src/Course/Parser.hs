@@ -600,8 +600,11 @@ phoneBodyParser = list (digit ||| is '.' ||| is '-')
 -- True
 phoneParser ::
   Parser Chars
-phoneParser =
-  error "todo"
+phoneParser = 
+  bindParser 
+  (\a -> let (_:.xs) = reverse a in valueParser (reverse xs)) 
+  parserWithHash
+  where parserWithHash = digit <:.> phoneBodyParser <++> ((is '#') <:.> (valueParser Nil))
 
 -- | Write a parser for Person.
 --
