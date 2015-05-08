@@ -653,7 +653,25 @@ phoneParser =
 personParser ::
   Parser Person
 personParser =
-  error "todo"
+  flbindParser ageParser
+  (\age' ->
+    flbindParser spaces1
+    (\_ ->
+      flbindParser firstNameParser
+      (\firstName' ->
+        flbindParser spaces1
+        (\_ ->
+          flbindParser surnameParser
+          (\surname' ->
+            flbindParser spaces1
+            (\_ ->
+              flbindParser smokerParser
+              (\smoker' ->
+                flbindParser spaces1
+                (\_ ->
+                  flbindParser phoneParser
+                  (\phone' ->
+                    valueParser (Person age' firstName' surname' smoker' phone'))))))))))
 
 -- Make sure all the tests pass!
 
