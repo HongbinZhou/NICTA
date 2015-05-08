@@ -126,8 +126,7 @@ string = foldRight(\x acc -> is x <:.> acc ) (pure Nil)
 stringTok ::
   Chars
   -> Parser Chars
-stringTok =
-  error "todo"
+stringTok = tok . string
 
 -- | Write a function that tries the given parser, otherwise succeeds by producing the given value.
 --
