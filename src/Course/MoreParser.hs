@@ -37,6 +37,8 @@ P p <.> i =
 --
 -- >>> parse spaces "abc"
 -- Result >abc< ""
+
+-- Ahhhh! zeroOrMore is list! oneOrMore is list1!
 zeroOrMore' :: Parser a -> Parser (List a)
 zeroOrMore' = many
 
