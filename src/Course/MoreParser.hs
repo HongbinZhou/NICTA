@@ -306,8 +306,13 @@ sepby1 ::
   Parser a
   -> Parser s
   -> Parser (List a)
-sepby1 =
-  error "todo"
+sepby1 a s = do
+  x <- a
+  y <- list $ do
+    _ <- s
+    a' <- a
+    return a'
+  return (x:.y)
 
 -- | Write a function that produces a list of values coming off the given parser,
 -- separated by the second given parser.
