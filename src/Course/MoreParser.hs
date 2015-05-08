@@ -170,8 +170,9 @@ digits1 = list1 digit
 oneof ::
   Chars
   -> Parser Char
-oneof =
-  error "todo"
+oneof s = do
+  a <- character
+  if a `elem` s then pure a else failed
 
 -- | Write a function that parses any character, but fails if it is in the given string.
 --
@@ -185,8 +186,9 @@ oneof =
 noneof ::
   Chars
   -> Parser Char
-noneof =
-  error "todo"
+noneof s = do
+  a <- character
+  if a `notElem` s then pure a else failed
 
 -- | Write a function that applies the first parser, runs the third parser keeping the result,
 -- then runs the second parser and produces the obtained result.
