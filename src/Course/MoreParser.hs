@@ -75,16 +75,14 @@ tok z = do
 charTok ::
   Char
   -> Parser Char
-charTok =
-  error "todo"
+charTok = tok . is
 
 -- | Write a parser that parses a comma ',' followed by 0 or more spaces.
 --
 -- /Tip:/ Use `charTok`.
 commaTok ::
   Parser Char
-commaTok =
-  error "todo"
+commaTok = charTok ','
 
 -- | Write a parser that parses either a double-quote or a single-quote.
 --
@@ -100,8 +98,7 @@ commaTok =
 -- True
 quote ::
   Parser Char
-quote =
-  error "todo"
+quote = is '\'' ||| is '"'
 
 -- | Write a function that parses the given string (fails otherwise).
 --
