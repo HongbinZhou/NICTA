@@ -341,8 +341,7 @@ sepby =
 -- True
 eof ::
   Parser ()
-eof =
-  error "todo"
+eof = pure ()
 
 -- | Write a parser that produces a characer that satisfies all of the given predicates.
 --
