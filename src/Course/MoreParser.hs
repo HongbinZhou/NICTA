@@ -256,8 +256,11 @@ betweenCharTok o c = between (charTok o) (charTok c)
 -- True
 hex ::
   Parser Char
-hex =
-  error "todo"
+hex = do
+  x <- thisMany 4 (satisfy isHexDigit)
+  case readHex x of
+   Empty -> failed
+   Full a -> return (toEnum a)
 
 -- | Write a function that parses the character 'u' followed by 4 hex digits and return the character value.
 --
