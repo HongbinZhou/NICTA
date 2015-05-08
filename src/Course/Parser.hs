@@ -502,6 +502,23 @@ firstNameParser' = appendParser upper (many lower)
 
 addParser :: Parser (List a)-> List (Parser a) -> Parser (List a)
 addParser = foldRight (\x acc -> appendParser x acc)
+
+(<:.>) :: Parser a -> Parser (List a)-> Parser (List a)
+x <:.> y = 
+  bindParser 
+  (\a -> bindParser
+         (\as -> valueParser (a :. as))
+         y )  x
+
+addParser' :: Parser (List a)-> Parser (List a) -> Parser (List a)
+addParser' x y =  
+  bindParser (\as -> bindParser 
+                    (\as' -> valueParser (as ++ as'))
+                    y ) x
+
+(<++>) :: Parser (List a)-> Parser (List a) -> Parser (List a)
+(<++>) = addParser'
+
 -- | Write a parser for Person.surname.
 --
 -- /Surname: string that starts with a capital letter and is followed by 5 or more lower-case letters./
@@ -516,9 +533,13 @@ addParser = foldRight (\x acc -> appendParser x acc)
 --
 -- >>> isErrorResult (parse surnameParser "abc")
 -- True
+surnameParser' ::
+  Parser Chars
+surnameParser' = addParser (many lower) (upper:.lower:.lower:.lower:.lower:.lower:.Nil)
+
 surnameParser ::
   Parser Chars
-surnameParser = addParser (many lower) (upper:.lower:.lower:.lower:.lower:.lower:.Nil)
+surnameParser = upper <:.> thisMany 5 lower <++> many lower
 
 -- | Write a parser for Person.smoker.
 --
