@@ -112,8 +112,7 @@ quote = is '\'' ||| is '"'
 string ::
   Chars
   -> Parser Chars
-string =
-  error "todo"
+string = foldRight(\x acc -> is x <:.> acc ) (pure Nil)
 
 -- | Write a function that parsers the given string, followed by 0 or more spaces.
 --
