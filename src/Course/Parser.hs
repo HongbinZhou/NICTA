@@ -557,8 +557,8 @@ surnameParser = upper <:.> thisMany 5 lower <++> many lower
 -- True
 smokerParser ::
   Parser Char
-smokerParser =
-  error "todo"
+smokerParser = is 'y' ||| is 'n'
+
 
 -- | Write part of a parser for Person#phoneBody.
 -- This parser will only produce a string of digits, dots or hyphens.
