@@ -64,8 +64,10 @@ spaces = zeroOrMore space
 tok ::
   Parser a
   -> Parser a
-tok =
-  error "todo"
+tok z = do
+  a <- z
+  spaces
+  return a
 
 -- | Write a function that parses the given char followed by 0 or more spaces.
 --
