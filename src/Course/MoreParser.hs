@@ -37,10 +37,19 @@ P p <.> i =
 --
 -- >>> parse spaces "abc"
 -- Result >abc< ""
+zeroOrMore' :: Parser a -> Parser (List a)
+zeroOrMore' = many
+
+zeroOrMore :: Parser a -> Parser (List a)
+zeroOrMore z = do
+  a <- z
+  as <- zeroOrMore z
+  return (a:.as)
+  ||| valueParser Nil
+
 spaces ::
   Parser Chars
-spaces =
-  error "todo"
+spaces = zeroOrMore space
 
 -- | Write a function that applies the given parser, then parses 0 or more spaces,
 -- then produces the result of the original parser.
