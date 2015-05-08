@@ -510,6 +510,8 @@ x <:.> y =
          (\as -> valueParser (a :. as))
          y )  x
 
+infixl 1 <:.>
+
 addParser' :: Parser (List a)-> Parser (List a) -> Parser (List a)
 addParser' x y =  
   bindParser (\as -> bindParser 
@@ -518,6 +520,8 @@ addParser' x y =
 
 (<++>) :: Parser (List a)-> Parser (List a) -> Parser (List a)
 (<++>) = addParser'
+
+infixl 1 <++>
 
 -- | Write a parser for Person.surname.
 --
@@ -604,7 +608,7 @@ phoneParser =
   bindParser 
   (\a -> let (_:.xs) = reverse a in valueParser (reverse xs)) 
   parserWithHash
-  where parserWithHash = digit <:.> phoneBodyParser <++> ((is '#') <:.> (valueParser Nil))
+  where parserWithHash = digit <:.> phoneBodyParser <++> (is '#' <:.> valueParser Nil)
 
 -- | Write a parser for Person.
 --
