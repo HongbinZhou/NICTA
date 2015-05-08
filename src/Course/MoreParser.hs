@@ -334,8 +334,7 @@ sepby ::
   Parser a
   -> Parser s
   -> Parser (List a)
-sepby =
-  error "todo"
+sepby a s = sepby1 a s ||| pure Nil
 
 -- | Write a parser that asserts that there is no remaining input.
 --
