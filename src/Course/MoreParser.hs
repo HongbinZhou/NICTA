@@ -396,8 +396,7 @@ satisfyAll s = satisfy (\c -> and $ s <*> (c:.Nil) )
 satisfyAny ::
   List (Char -> Bool)
   -> Parser Char
-satisfyAny =
-  error "todo"
+satisfyAny s = satisfy $ or . sequence s
 
 -- | Write a parser that parses between the two given characters, separated by a comma character ','.
 --
