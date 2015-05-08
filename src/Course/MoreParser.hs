@@ -141,8 +141,7 @@ option ::
   a
   -> Parser a
   -> Parser a
-option =
-  error "todo"
+option x z = z ||| pure x
 
 -- | Write a parser that parses 1 or more digits.
 --
