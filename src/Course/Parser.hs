@@ -673,6 +673,19 @@ personParser =
                   (\phone' ->
                     valueParser (Person age' firstName' surname' smoker' phone'))))))))))
 
+personParser' :: Parser Person
+personParser' = do
+  age' <- ageParser
+  spaces1
+  firstName' <- firstNameParser
+  spaces1
+  surname' <- surnameParser
+  spaces1
+  smoker' <- smokerParser
+  spaces1  
+  phone' <- phoneParser
+  return (Person age' firstName' surname' smoker' phone')
+
 -- Make sure all the tests pass!
 
 
