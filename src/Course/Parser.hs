@@ -683,8 +683,7 @@ instance Functor Parser where
     (a -> b)
     -> Parser a
     -> Parser b
-  (<$>) =
-     error "todo"
+  f <$> p = flbindParser p (\a -> valueParser (f a))
 
 -- | Write a Apply instance for a @Parser@.
 -- /Tip:/ Use @bindParser@ and @valueParser@.
@@ -693,16 +692,15 @@ instance Apply Parser where
     Parser (a -> b)
     -> Parser a
     -> Parser b
-  (<*>) =
-    error "todo"
+  x <*> y = flbindParser y (\a -> flbindParser x (\fa -> valueParser (fa a)))
 
 -- | Write an Applicative functor instance for a @Parser@.
 instance Applicative Parser where
   pure ::
     a
     -> Parser a
-  pure =
-    error "todo"
+  pure = valueParser
+
 
 -- | Write a Bind instance for a @Parser@.
 instance Bind Parser where
@@ -710,7 +708,6 @@ instance Bind Parser where
     (a -> Parser b)
     -> Parser a
     -> Parser b
-  (=<<) =
-    error "todo"
+  (=<<) = bindParser
 
 instance Monad Parser where
