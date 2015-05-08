@@ -282,8 +282,9 @@ hex = do
 -- True
 hexu ::
   Parser Char
-hexu =
-  error "todo"
+hexu = do
+  _ <- is 'u'
+  hex
 
 -- | Write a function that produces a non-empty list of values coming off the given parser (which must succeed at least once),
 -- separated by the second given parser.
