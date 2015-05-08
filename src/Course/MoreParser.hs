@@ -368,8 +368,15 @@ eof = pure ()
 satisfyAll ::
   List (Char -> Bool)
   -> Parser Char
-satisfyAll =
-  error "todo"
+
+-- version 1:
+satisfyAll s = satisfy (\c -> and $ s <*> (c:.Nil) )
+
+-- version 2:
+-- satisfyAll s = satisfy (\c -> and $ (sequence s) c)
+
+-- version 3:
+-- satisfyAll s = satisfy $ and . sequence s
 
 -- | Write a parser that produces a characer that satisfies any of the given predicates.
 --
