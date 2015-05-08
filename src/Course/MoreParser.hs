@@ -237,8 +237,7 @@ betweenCharTok ::
   -> Char
   -> Parser a
   -> Parser a
-betweenCharTok =
-  error "todo"
+betweenCharTok o c = between (charTok o) (charTok c)
 
 -- | Write a function that parses 4 hex digits and return the character value.
 --
