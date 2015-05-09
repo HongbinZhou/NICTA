@@ -108,10 +108,24 @@ toSpecialCharacter c =
 --
 -- >>> isErrorResult (parse jsonString "\"\\abc\"def")
 -- True
+specialCharParser :: Parser Char
+specialCharParser = do
+  a <- character
+  case a of
+   '"' -> failed
+   '\\' -> do
+     c <- character
+     case c of 
+      'u' -> hex
+      _ -> case toSpecialCharacter c of
+        Full x -> return (fromSpecialCharacter x)
+        _ -> failed
+   _ -> return a
+
 jsonString ::
   Parser Chars
-jsonString =
-  error "todo"
+jsonString = between (is '"') (is '"') (many specialCharParser)
+
 
 -- | Parse a JSON rational.
 --
