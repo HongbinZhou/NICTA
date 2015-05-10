@@ -113,8 +113,14 @@ convertInteractive = do
 -- /Tip:/ @putStrLn :: String -> IO ()@ -- Prints a string and then a new line to standard output.
 reverseInteractive ::
   IO ()
-reverseInteractive =
-  error "todo"
+reverseInteractive = do
+  _ <- putStrLn "Please input the file name to reverse:"
+  infilename <- getLine
+  contents <- readFile infilename
+  _ <- putStrLn "Please input the file name to write the reversed file to:"
+  outfilename <- getLine
+  writeFile outfilename (reverse contents)
+  
 
 -- |
 --
