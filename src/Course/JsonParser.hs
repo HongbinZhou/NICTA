@@ -151,10 +151,15 @@ jsonString = between (is '"') (is '"') (many specialCharParser)
 --
 -- >>> isErrorResult (parse jsonNumber "abc")
 -- True
+
+-- Note: 
+--      It will be converted to fractional automatically by using assigning type!
+--      123.45 :: Rational = 2469 % 20
 jsonNumber ::
   Parser Rational
-jsonNumber =
-  error "todo"
+jsonNumber = P $ (\i -> case readFloats i of
+                         Full (x, xs) -> Result xs x
+                         _ -> ErrorResult Failed)
 
 -- | Parse a JSON true literal.
 --
