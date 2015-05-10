@@ -264,11 +264,11 @@ jsonValue =
   do
     a <- jsonString
     return (JsonString a)
-  ||| 
+  |||
   do 
     a <- jsonNumber
-    return (JsonRational True a)
-  |||
+    return (JsonRational False a)
+  ||| 
   do
     a <- jsonObject
     return (JsonObject a)
@@ -295,5 +295,6 @@ jsonValue =
 readJsonValue ::
   Filename
   -> IO (ParseResult JsonValue)
-readJsonValue =
-  error "todo"
+readJsonValue f = do
+  c <- readFile f
+  return (parse jsonValue c)

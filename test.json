@@ -1,0 +1,8 @@
+{
+    "!" : {
+	"message" : "LPT1 on fire",
+	"errno" : [-1],
+	"stack" : "print()@42"
+    }
+}
+

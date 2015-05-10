@@ -6,3 +6,4 @@
      λ> parse (sequenceParser' (character :. is 'x' :. upper :. Nil)) "axCdef"
      Parse failed
      #+end_src
+2. jsonParser is very slow!!
