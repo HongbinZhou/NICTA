@@ -124,7 +124,7 @@ specialCharParser = do
 
 jsonString ::
   Parser Chars
-jsonString = between (is '"') (is '"') (many specialCharParser)
+jsonString = between (charTok '"') (charTok '"') (many specialCharParser)
 
 
 -- | Parse a JSON rational.
@@ -220,8 +220,7 @@ jsonNull = stringTok "null"
 -- Result >< [JsonTrue,JsonString "abc",JsonArray [JsonFalse]]
 jsonArray ::
   Parser (List JsonValue)
-jsonArray =
-  error "todo"
+jsonArray = betweenSepbyComma '[' ']' jsonValue
 
 -- | Parse a JSON object.
 --
@@ -240,8 +239,12 @@ jsonArray =
 -- Result >xyz< [("key1",JsonTrue),("key2",JsonFalse)]
 jsonObject ::
   Parser Assoc
-jsonObject =
-  error "todo"
+jsonObject = betweenSepbyComma '{' '}' pairParser
+             where pairParser = do
+                     key <- jsonString
+                     _ <- charTok ':'
+                     value <- jsonValue
+                     return (key, value)
 
 -- | Parse a JSON value.
 --
@@ -257,8 +260,34 @@ jsonObject =
 -- Result >< [("key1",JsonTrue),("key2",JsonArray [JsonRational False (7 % 1),JsonFalse]),("key3",JsonObject [("key4",JsonNull)])]
 jsonValue ::
   Parser JsonValue
-jsonValue =
-   error "todo"
+jsonValue = 
+  do
+    a <- jsonString
+    return (JsonString a)
+  ||| 
+  do 
+    a <- jsonNumber
+    return (JsonRational True a)
+  |||
+  do
+    a <- jsonObject
+    return (JsonObject a)
+  |||
+  do 
+    a <- jsonArray
+    return (JsonArray a)
+  |||
+  do
+    _ <- jsonTrue
+    return (JsonTrue)
+  |||
+  do
+    _ <- jsonFalse
+    return (JsonFalse)
+  |||
+  do
+    _ <- jsonNull
+    return (JsonNull)
 
 -- | Read a file into a JSON value.
 --
