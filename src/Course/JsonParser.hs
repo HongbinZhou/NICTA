@@ -258,36 +258,59 @@ jsonObject = betweenSepbyComma '{' '}' pairParser
 --
 -- >>> parse jsonObject "{ \"key1\" : true , \"key2\" : [7, false] , \"key3\" : { \"key4\" : null } }"
 -- Result >< [("key1",JsonTrue),("key2",JsonArray [JsonRational False (7 % 1),JsonFalse]),("key3",JsonObject [("key4",JsonNull)])]
+-- >>> parse jsonValue "{\"message\":\"hi\",\"i\": {\"errno\" : -1}, \"stack\":\"print()\"}"
+-- Result >< JsonObject [("message",JsonString "hi"),("i",JsonObject [("errno",JsonRational False ((-1) % 1))]),("stack",JsonString "print()@21")]
 jsonValue ::
   Parser JsonValue
 jsonValue = 
   do
-    a <- jsonString
-    return (JsonString a)
-  |||
-  do 
-    a <- jsonNumber
-    return (JsonRational False a)
-  ||| 
-  do
-    a <- jsonObject
-    return (JsonObject a)
-  |||
-  do 
-    a <- jsonArray
-    return (JsonArray a)
+    _ <- spaces
+    _ <- jsonNull
+    return (JsonNull)
   |||
   do
+    _ <- spaces
     _ <- jsonTrue
     return (JsonTrue)
   |||
   do
+    _ <- spaces
     _ <- jsonFalse
     return (JsonFalse)
   |||
+  do 
+    _ <- spaces
+    a <- jsonNumber
+    return (JsonRational False a)
+  |||
   do
-    _ <- jsonNull
-    return (JsonNull)
+    _ <- spaces
+    a <- jsonString
+    return (JsonString a)
+  ||| 
+  do
+    _ <- spaces
+    a <- jsonObject
+    return (JsonObject a)
+  |||
+  do 
+    _ <- spaces
+    a <- jsonArray
+    return (JsonArray a)
+
+-- Improved version
+-- ref: https://github.com/tonymorris/course/blob/master/src/Course/JsonParser.hs
+jsonValue' ::
+  Parser JsonValue
+jsonValue' =
+  spaces *>
+  (JsonNull <$ jsonNull
+  ||| JsonTrue <$ jsonTrue
+  ||| JsonFalse <$ jsonFalse
+  ||| JsonArray <$> jsonArray
+  ||| JsonString <$> jsonString
+  ||| JsonObject <$> jsonObject
+  ||| JsonRational False <$> jsonNumber)
 
 -- | Read a file into a JSON value.
 --

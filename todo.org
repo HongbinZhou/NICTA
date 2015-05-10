@@ -1,4 +1,4 @@
-1. Parser.hs
+* Parser.hs
    - list
    - list1
    - Why it failed when use foldLeft?
@@ -6,4 +6,7 @@
      λ> parse (sequenceParser' (character :. is 'x' :. upper :. Nil)) "axCdef"
      Parse failed
      #+end_src
-2. jsonParser is very slow!!
+* DONE jsonParser is very slow!!
+CLOSED: [2015-05-10 Sun 22:22]
+   The order matters! 
+   Should checks in order: null -> true/false -> number -> string -> object -> array
