@@ -185,8 +185,7 @@ jsonTrue = stringTok "true"
 -- True
 jsonFalse ::
   Parser Chars
-jsonFalse =
-  error "todo"
+jsonFalse = stringTok "false"
 
 -- | Parse a JSON null literal.
 --
