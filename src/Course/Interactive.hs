@@ -83,8 +83,10 @@ data Op =
 -- /Tip:/ @putStrLn :: String -> IO ()@ -- Prints a string and then a new line to standard output.
 convertInteractive ::
   IO ()
-convertInteractive =
-  error "todo"
+convertInteractive = do
+  _ <- putStrLn "Please enter a string which will be converted to upper case:"
+  i <- getLine
+  putStrLn $ toUpper <$> i
 
 -- |
 --
