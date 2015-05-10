@@ -172,8 +172,7 @@ jsonNumber = P $ (\i -> case readFloats i of
 -- True
 jsonTrue ::
   Parser Chars
-jsonTrue =
-  error "todo"
+jsonTrue = stringTok "true"
 
 -- | Parse a JSON false literal.
 --
