@@ -145,8 +145,14 @@ reverseInteractive = do
 -- /Tip:/ @putStrLn :: String -> IO ()@ -- Prints a string and then a new line to standard output.
 encodeInteractive ::
   IO ()
-encodeInteractive =
-  error "todo"
+encodeInteractive = do
+  _ <- putStrLn "Please enter a string to url-encode:"
+  s <- getLine
+  putStrLn $ foldRight (\x acc -> case x of
+                                  ' '  -> "%20" ++ acc
+                                  '\t' -> "%09" ++ acc
+                                  '\"' -> "%22" ++ acc
+                                  _    -> x :. acc) Nil s
 
 interactive ::
   IO ()
