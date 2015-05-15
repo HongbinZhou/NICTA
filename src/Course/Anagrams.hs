@@ -32,8 +32,21 @@ anagrams ::
   Chars
   -> Filename
   -> IO (List Chars)
-anagrams =
-  error "todo"
+anagrams s f = 
+  (\c -> intersectBy equalIgnoringCase (permutations s) c)
+  <$> (loadDic f)
+
+-- dic format: 
+--     file name such as: dict.dat
+--     content:
+--         hi
+--         ih
+--         ...
+loadDic :: Filename -> IO (List Chars)
+loadDic f = lines <$> (readFile f)
+
+test :: Chars -> List Chars -> List Chars
+test s dic = intersectBy equalIgnoringCase (permutations s) dic
 
 -- Compare two strings for equality, ignoring case
 equalIgnoringCase ::
