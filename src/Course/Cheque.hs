@@ -187,7 +187,7 @@ data Digit =
   | Seven
   | Eight
   | Nine
-  deriving (Eq, Enum, Bounded)
+  deriving (Eq, Enum, Bounded, Show)
 
 showDigit ::
   Digit
@@ -218,7 +218,39 @@ data Digit3 =
   D1 Digit
   | D2 Digit Digit
   | D3 Digit Digit Digit
-  deriving Eq
+  deriving (Eq, Show)
+
+fromDigit3 :: Digit3 -> Chars
+
+fromDigit3 (D1 a) = showDigit a
+
+fromDigit3 (D2 Zero a) = fromDigit3 (D1 a)
+fromDigit3 (D2 One Zero) = "ten"
+fromDigit3 (D2 One One) = "eleven"
+fromDigit3 (D2 One Two) = "twelve"
+fromDigit3 (D2 One Three) = "thirteen"
+fromDigit3 (D2 One Four) = "fourteen"
+fromDigit3 (D2 One Five) = "fifteen"
+fromDigit3 (D2 One Six) = "sixteen"
+fromDigit3 (D2 One Seven) = "seventeen"
+fromDigit3 (D2 One Eight) = "eighteen"
+fromDigit3 (D2 One Nine) = "nineteen"
+
+fromDigit3 (D2 Two Zero) = "twenty"
+fromDigit3 (D2 Three Zero) = "thirty"
+fromDigit3 (D2 Four Zero) = "fourty"
+fromDigit3 (D2 Five Zero) = "fifty"
+fromDigit3 (D2 Six Zero) = "sixty"
+fromDigit3 (D2 Seven Zero) = "seventy"
+fromDigit3 (D2 Eight Zero) = "eighty"
+fromDigit3 (D2 Nine Zero) = "ninety"
+fromDigit3 (D2 a b) = fromDigit3 (D2 a Zero) ++ "-" ++ showDigit b
+
+fromDigit3 (D3 Zero Zero Zero) = ""
+fromDigit3 (D3 Zero Zero a) = fromDigit3 (D1 a)
+fromDigit3 (D3 Zero a b) = fromDigit3 (D2 a b)
+fromDigit3 (D3 a Zero Zero) = fromDigit3 (D1 a) ++ " hundred"
+fromDigit3 (D3 a b c) = showDigit a ++ " hundred and " ++ fromDigit3 (D2 b c)
 
 -- Possibly convert a character to a digit.
 fromChar ::
@@ -323,5 +355,36 @@ fromChar _ =
 dollars ::
   Chars
   -> Chars
-dollars =
-  error "todo"
+dollars s = 
+  let (intPart, centPart) = span (/='.') s in 
+  (showInt intPart) ++ "and " ++ (showCent $ digits centPart)
+
+showCent :: Optional (List Digit) -> Chars
+showCent (Full (x:.Nil)) = fromDigit3 (D2 x Zero) ++ " cents"
+showCent (Full (x:.y:._)) = fromDigit3 (D2 x y) ++ " cents"
+showCent _ = "zero cents"
+
+digits :: Chars -> Optional (List Digit)
+digits s = seqOptional $ filter (/=Empty) (fromChar <$> s)
+
+digitToDigit3 :: List Digit -> List Digit3
+digitToDigit3 s = 
+  case reverse s of
+   Nil -> Nil
+   (a:.Nil) -> ((D1 a):.Nil)
+   (a:.b:.Nil) -> ((D2 b a):.Nil)
+   (a:.b:.c:.xs) -> (digitToDigit3 (reverse xs)) ++ ((D3 c b a):.Nil)
+
+stringToDigit3 :: Chars -> List Digit3
+stringToDigit3 s = let (Full x) = digits s in digitToDigit3 x
+
+showInt :: Chars -> Chars
+showInt s = unwords (filter (/="") (withIllion (readableS s))) ++ "dollars "
+
+readableS :: Chars -> List Chars
+readableS s = fromDigit3 <$> stringToDigit3 s
+
+withIllion :: List Chars -> List Chars
+withIllion s = reverse $ zipWith f (reverse s) illion
+                where f Nil _ = Nil
+                      f a b = a ++ " " ++ b :: List Char
