@@ -14,8 +14,7 @@ fastAnagrams ::
   Chars
   -> Filename
   -> IO (List Chars)
-fastAnagrams =
-  error "todo"
+fastAnagrams s f = (intersectBy (==) (permutations s)).lines <$> (readFile f)
 
 newtype NoCaseString =
   NoCaseString {

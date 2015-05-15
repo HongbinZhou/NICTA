@@ -59,3 +59,13 @@ equalIgnoringCase Nil _ = False
 equalIgnoringCase (x:.xs) (y:.ys) = 
   (toLower x) == (toLower y) && 
   equalIgnoringCase xs ys
+
+--  (h `on` f) :: a -> a -> c
+--  h :: b -> b -> c
+--  f :: a -> b
+--  usually on accept two param, 
+--  the first one is a function, which should apply to 'b'
+--  the second one is a function too, which accept an 'a' and convert a to 'b'
+--  then (h `on` f) will accept two 'a's and give the result c.
+equalIgnoringCase' :: Chars -> Chars -> Bool
+equalIgnoringCase' = (==) `on` (toLower <$>)
