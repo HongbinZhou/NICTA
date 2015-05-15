@@ -40,5 +40,9 @@ equalIgnoringCase ::
   Chars
   -> Chars
   -> Bool
-equalIgnoringCase =
-  error "todo"
+equalIgnoringCase Nil Nil = True
+equalIgnoringCase _ Nil = False
+equalIgnoringCase Nil _ = False
+equalIgnoringCase (x:.xs) (y:.ys) = 
+  (toLower x) == (toLower y) && 
+  equalIgnoringCase xs ys
